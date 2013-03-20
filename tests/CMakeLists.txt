@@ -1,5 +1,5 @@
 
-set( EXT_LIBS boost_unit_test_framework boost_test_frame)
+set( EXT_LIBS boost_unit_test_framework boost_utf_dependency)
 
 file(GLOB_RECURSE SOURCE "*.cpp")
 

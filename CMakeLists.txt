@@ -18,7 +18,7 @@ find_package(Boost)
 
 set( EXT_LIBS boost_unit_test_framework)
 
-set( TARGET_NAME boost_test_frame)
+set( TARGET_NAME boost_utf_dependency)
 
 file(GLOB_RECURSE SOURCE "src/*.cpp")
 
