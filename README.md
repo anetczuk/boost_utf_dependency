@@ -18,8 +18,8 @@ Limitations:
 - unable to handle dependencies registered through test_case::dependes_on() method.
 
 
-Use
+use
 ===
 
 Project contains unit tests of itself and simple example of use.
- 
+
