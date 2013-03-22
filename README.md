@@ -12,7 +12,7 @@ Features:
 - calling '--run_test' command with dependent test units,
 - handles non existing test units at time of auto registration,
 - filtering test units similar to '--run_test' command,
--- option '--auto_dependency' to enable/disable the feature.
+- option '--auto_dependency' to enable/disable the feature.
 
 Limitations:
 - unresolved cycles in dependencies,
