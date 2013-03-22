@@ -60,6 +60,9 @@ namespace dependency {
 
 		DependencyLevelMap levels;
 
+		/**
+		 * Map containing registered dependencies as given in source files.
+		 */
 		DependencyIdMap dependencyMap;
 
 		/**

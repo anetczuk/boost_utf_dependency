@@ -185,6 +185,9 @@ namespace dependency {
 			return filter.ancestors;
 		}
 
+		/**
+		 * Returns all ancestors of given units
+		 */
 		static DependencyIdSet read(const boost::unit_test::test_suite& suite, const DependencyIdSet& unitSet) {
 			TestAncestorsReader filter(suite, unitSet);
 			traverse_test_tree(suite, filter);

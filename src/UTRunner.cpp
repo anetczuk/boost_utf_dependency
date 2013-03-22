@@ -15,6 +15,45 @@
 #include <boost/test/results_reporter.hpp>
 #include <boost/test/results_collector.hpp>
 
+#include <boost/program_options.hpp>
+
+
+//-----------------------------------------------------------------------------
+
+namespace po = boost::program_options;
+
+dependency::auto_dependency handleParams(int argc, char *argv[]) {
+
+	dependency::auto_dependency depend;
+
+	po::options_description desc("Allowed options");
+
+	desc.add_options()
+//	("help", "produce help message")
+	("auto_dependency",
+			po::value<dependency::auto_dependency>(&depend)->default_value(dependency::auto_dependency_on ),
+			"turn auto dependency on/off");
+
+	po::variables_map vm;
+//	po::store(po::parse_command_line(argc, argv, desc), vm);
+
+	po::parsed_options parsed =
+	    po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();
+	po::store(parsed, vm);
+
+	po::notify(vm); 											//assign the variables (if they were specified)
+
+//	if (vm.count("help") || argc==1) {
+//		std::cout << desc << std::endl;
+//		return 1;
+//	}
+
+//	std::cout << "Auto dependency: " << depend << std::endl;
+
+	return depend;
+}
+
+//-----------------------------------------------------------------------------
 
 dependency::DependencyIdMap manage_dependency(::boost::unit_test::test_suite& master, const dependency::DependencyContainer& dependencyContainer) {
 
@@ -31,7 +70,7 @@ dependency::DependencyIdMap manage_dependency(::boost::unit_test::test_suite& ma
 //----------------------------
 
 dependency::DependencyIdSet extractDependentUnits(const dependency::DependencyIdSet& matchedUnits, ::boost::unit_test::test_suite& suite, const dependency::DependencyIdMap& dependencyMap) {
-	dependency::DependencyIdMap acestorsDepMap = dependencyMap;
+	dependency::DependencyIdMap acestorsDepMap = dependencyMap;						//copy!
 	dependency::DependencySolver::expandDependencyAncestors(suite, acestorsDepMap);
 
 	//convert ancestorsMap to deepDependencyMap
@@ -48,25 +87,33 @@ namespace boost {
 
 		int BOOST_TEST_DECL unit_test_main_extended( init_unit_test_func init_func, int argc, char* argv[], ::boost::unit_test::test_suite& suite, const dependency::DependencyContainer* dependencyContainer ) {
 			try {
+				//have to be called before framework::init()
+				dependency::auto_dependency callDependency = handleParams(argc, argv);
+
 				if (framework::is_initialized()==false) {
 					framework::init( init_func, argc, argv );
 				}
 
 				if (dependencyContainer!=NULL) {
-					dependency::DependencyIdMap dependencyMap = manage_dependency(suite, *dependencyContainer);
+					dependency::DependencyIdMap dependencyMap;
+					if (callDependency==dependency::auto_dependency_on) {
+						dependencyMap = manage_dependency(suite, *dependencyContainer);
+					}
 
 					if( !runtime_config::test_to_run().is_empty() ) {
 						boost::unit_test::const_string param = runtime_config::test_to_run();
 						std::string filterName( param.begin(), param.end() );
 
 						dependency::DependencyIdSet matchedUnits = dependency::TestUnitIdReader::filter(suite, filterName );
-//						LogInfo << "matchedUnits: " << dependency::print(matchedUnits) << std::endl;
+//						DEPENDENCY_LOG_MESSAGE( "matchedUnits: " << dependency::print(matchedUnits) );
 
 						dependency::DependencyIdSet ascensorUnits = dependency::TestAncestorsReader::read(suite, matchedUnits );
-//						LogInfo << "acensorUnits: " << dependency::print(ascensorUnits) << std::endl;
+//						DEPENDENCY_LOG_MESSAGE( "acensorUnits: " << dependency::print(ascensorUnits) );
+
+//						DEPENDENCY_LOG_MESSAGE( "dependency map: " << dependency::print(dependencyMap) );
 
 						dependency::DependencyIdSet filteredUnits = extractDependentUnits(ascensorUnits, suite, dependencyMap);
-//						LogInfo << "filteredUnits: " << dependency::print(filteredUnits) << std::endl;
+//						DEPENDENCY_LOG_MESSAGE( "filteredUnits: " << dependency::print(filteredUnits) );
 
 						dependency::TestUnitsFilter filter(filteredUnits);
 
@@ -125,6 +172,8 @@ namespace boost {
 }
 
 
+//------------------------------------------------------------------
+
 
 #ifndef BOOST_TEST_MODULE
 bool init_unit_test() {
@@ -132,7 +181,11 @@ bool init_unit_test() {
 }
 #endif
 
-
 int run_tests(int argc, char *argv[]) {
+//	std::cout << "args: " << argc << std::endl;
+//	for(int i=0; i<argc; i++) {
+//		std::cout << argv[i] << std::endl;
+//	}
+//	handleParams(argc, argv);
 	return ::boost::unit_test::unit_test_main_extended( &init_unit_test, argc, argv);
 }

@@ -11,11 +11,12 @@ Features:
 - ordering test units according to dependency,
 - calling '--run_test' command with dependent test units,
 - handles non existing test units at time of auto registration,
-- filtering test units similar to '--run_test' command.
+- filtering test units similar to '--run_test' command,
+-- option '--auto_dependency' to enable/disable the feature.
 
 Limitations:
 - unresolved cycles in dependencies,
-- unable to handle dependencies registered through test_case::dependes_on() method.
+- unable to handle dependencies registered by test_case::dependes_on() method.
 
 
 use

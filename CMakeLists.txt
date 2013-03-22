@@ -16,7 +16,7 @@ include_directories( "./include" )
 
 find_package(Boost)
 
-set( EXT_LIBS boost_unit_test_framework)
+set( EXT_LIBS boost_unit_test_framework boost_program_options-mt)
 
 set( TARGET_NAME boost_utf_dependency)
 

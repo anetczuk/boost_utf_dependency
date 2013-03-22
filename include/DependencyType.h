@@ -51,7 +51,21 @@ namespace dependency {
 			~LogDisableInScope();
 		};
 	}
+
+	/**
+	 * Auto dependency parameter
+	 */
+	enum auto_dependency {
+		auto_dependency_on = 0,
+		auto_dependency_off = 1
+	};
+
+
 }
+
+std::istream& operator>>(std::istream& in, dependency::auto_dependency& unit);
+
+std::ostream& operator<<(std::ostream& out, const dependency::auto_dependency& unit);
 
 
 //-------------------------------------------------------------------------------------
@@ -153,6 +167,8 @@ namespace dependency {
 
 
 	std::string print(const DependencyIdSet& set);
+
+	std::string print(const DependencyIdMap& idMap);
 
 }
 

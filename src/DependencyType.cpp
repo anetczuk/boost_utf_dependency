@@ -97,4 +97,52 @@ namespace dependency {
 		return stream.str();
 	}
 
+	std::string print(const DependencyIdMap& idMap) {
+		std::stringstream str;
+		DependencyIdMap::const_iterator iter = idMap.begin();
+		DependencyIdMap::const_iterator eiter = idMap.end();
+		for(; iter!=eiter; iter++) {
+			str << iter->first << ": " << print(iter->second) << std::endl;
+		}
+		return str.str();
+	}
+
+}
+
+/**
+ * Operator to handle program option
+ */
+std::istream& operator>>(std::istream& in, dependency::auto_dependency& unit)
+{
+	std::string token;
+	in >> token;
+	if (token == "on")
+		unit = dependency::auto_dependency_on;
+	else if (token == "off")
+		unit = dependency::auto_dependency_off;
+	else {
+		//in case of unknown value
+		unit = dependency::auto_dependency_on;
+	}
+//    else throw boost::program_options::validation_error("Invalid unit");
+	return in;
+}
+
+std::ostream& operator<<(std::ostream& out, const dependency::auto_dependency& unit) {
+	switch(unit) {
+	case dependency::auto_dependency_on: {
+		out << "on";
+		break;
+	}
+	case dependency::auto_dependency_off: {
+		out << "off";
+		break;
+	}
+	default: {
+//		out << "unknown";
+		out << "on";
+		break;
+	}
+	}
+	return out;
 }

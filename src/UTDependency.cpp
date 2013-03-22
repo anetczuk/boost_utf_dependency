@@ -89,16 +89,6 @@ namespace dependency {
 		return str.str();
 	}
 
-	std::string print(const DependencyIdMap& idMap) {
-		std::stringstream str;
-		DependencyIdMap::const_iterator iter = idMap.begin();
-		DependencyIdMap::const_iterator eiter = idMap.end();
-		for(; iter!=eiter; iter++) {
-			str << "dependency[" << iter->first << "]: " << print(iter->second) << std::endl;
-		}
-		return str.str();
-	}
-
 	std::string print(const DependencyLevelMap& idMap) {
 		std::stringstream str;
 		DependencyLevelMap::const_iterator iter = idMap.begin();
