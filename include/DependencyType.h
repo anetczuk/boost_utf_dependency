@@ -75,6 +75,9 @@ std::ostream& operator<<(std::ostream& out, const dependency::auto_dependency& u
 //#define BOOST_DO_JOIN( X, Y ) BOOST_DO_JOIN2(X,Y)
 //#define BOOST_DO_JOIN2( X, Y ) X##Y
 
+/**
+ * Disable or enable logging.
+ */
 #define DEPENDENCY_LOG_SET_STATE(B) dependency::log::set_log_state( B )
 
 #define DEPENDENCY_LOG_DISABLE DEPENDENCY_LOG_SET_STATE(false)
@@ -84,13 +87,12 @@ std::ostream& operator<<(std::ostream& out, const dependency::auto_dependency& u
 #define DEPENDENCY_LOG_DISABLE_IN_SCOPE			\
 		dependency::log::LogDisableInScope BOOST_JOIN(dependencyLogDisabler_, __LINE__)
 
+#define DEPENDENCY_LOG_SINK ::boost::unit_test::runtime_config::log_sink()
+
 /**
  * ll - log level of type ::boost::unit_test_::log::log_level
  * M - message
  */
-
-#define DEPENDENCY_LOG_SINK ::boost::unit_test::runtime_config::log_sink()
-
 #define DEPENDENCY_LOG( ll, M )				                                																			\
 	if (dependency::log::get_log_state_value() && ::boost::unit_test::runtime_config::log_level() <= ll && DEPENDENCY_LOG_SINK != NULL) {		\
 		*(DEPENDENCY_LOG_SINK) << __FILE__ << "(" << __LINE__ << "): " << M << std::endl;														\
