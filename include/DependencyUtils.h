@@ -8,9 +8,11 @@
 #ifndef DEPENDENCYUTILS_H_
 #define DEPENDENCYUTILS_H_
 
+#include "DependencyLog.h"
 #include "DependencyType.h"
 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/detail/unit_test_parameters.hpp>
 
 
 namespace dependency {
